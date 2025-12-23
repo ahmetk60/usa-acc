@@ -1,7 +1,7 @@
 ## US ABD Trafik Kazaları Şiddet Tahmini ve Analizi
 
 ![US Accidents Heatmap](img/heatmap-placeholder.png)
-*Python ile oluşturulmuş, ABD haritası üzerinde kaza yoğunluğunu gösteren ısı haritası*
+**Python ile oluşturulmuş, ABD haritası üzerinde kaza yoğunluğunu gösteren ısı haritası**
 
 ## 📌 Proje Özeti
 
