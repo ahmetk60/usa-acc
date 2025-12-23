@@ -37,7 +37,11 @@ Amaç, **kaza şiddetini en iyi açıklayan faktörleri** ve **en başarılı mo
 
 ### 🎯 Hedef Değişken Dağılımı
 
-![Hedef Değişken Dağılımı](img/hedef-degisken-dagilimi.png)
+<p align="center">
+  <a href="img/hedef-degisken-dagilimi.png">
+    <img src="img/hedef-degisken-dagilimi.png" width="600"/>
+  </a>
+</p>
 
 ### 🌍 Coğrafi Dağılım
 
@@ -107,52 +111,15 @@ Bu bölümde, her ekip üyesinin odaklandığı alan, kullandığı özellik gru
 
 **Görseller:**
 
-![XGBoost Confusion Matrix](img/sila-xgboost-confusion.png)
-![Logistic Regression PCA](img/sila-logistic-regressin-pca.png)
-![Baseline Model](img/sila-baseline.png)
-![Baseline Model 2](img/sila-baseline2.png)
-
-### 🛠️ Ek Not
-
-Veri ön işleme adımları profesyonel bir **pipeline** yapısı ile uygulanmıştır:
-
-* Outlier Clipping
-* Missing Value Imputation
-* One-Hot Encoding
-
----
-
-## 👤 Üye 2: İlkay Özkan
-
-**Odak Alanı:** Boosting Algoritmaları & Hiperparametre Optimizasyonu
-
-### 🔍 Yaklaşım
-
-* Veri setindeki **dengesizlik** ve **karmaşık ilişkiler** hedeflenmiştir.
-* Modern **Gradient Boosting** algoritmaları kullanılmıştır.
-* **GridSearchCV** ile hiperparametre optimizasyonu yapılmıştır.
-
-### 🧩 Feature Seçimi
-
-* Model, veri setindeki **tüm belirleyici özellikleri** kullanmıştır.
-* **Feature Importance** analizi yapılmıştır.
-
-**Öne Çıkan Faktörler:**
-
-* Coğrafi / Konumsal bilgiler
-* Zamansal değişkenler
-
-### 🤖 Kullanılan Modeller
-
-* Dummy Classifier *(Baseline)*
-* AdaBoost Classifier
-* CatBoost Classifier
-
-### 📈 Sonuçlar
-
-* AdaBoost modeli optimize edilerek performans artırılmıştır.
-* **CatBoost**, en yüksek doğruluk ve **ROC-AUC** değerlerine ulaşmıştır.
-* Özellikle **Severity 3 ve 4** tahminlerinde başarılıdır.
+<p align="center">
+  <a href="img/ilkay-catboost.png">
+    <img src="img/ilkay-catboost.png" width="400"/>
+  </a>
+  <a href="img/ilkay-catboost-blok-grafiği.png">
+    <img src="img/ilkay-catboost-blok-grafiği.png" width="400"/>
+  </a>
+</p>st**, en yüksek doğruluk ve **ROC-AUC** değerlerine ulaşmıştır.
+- Özellikle **Severity 3 ve 4** tahminlerinde başarılıdır.
 
 **Görseller:**
 
@@ -235,5 +202,4 @@ Veri ön işleme adımları profesyonel bir **pipeline** yapısı ile uygulanmı
 * Metin verileri, yardımcı fakat anlamlı katkılar sağlamıştır.
 
 ---
-
 
