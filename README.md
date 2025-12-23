@@ -49,31 +49,33 @@ Proje kapsamında 5 kişilik ekip, veri setini farklı bakış açılarıyla ele
 #### 🔍 Yaklaşım
 - Yaklaşık 2 milyon örneklem üzerinde çalışılmıştır
 - Hesaplama maliyetini düşürmek ve gürültüyü azaltmak için **PCA (Principal Component Analysis)** uygulanmıştır
-- Toplam varyansın %95'i korunmuştur
-- Güçlü ensemble modeller ile sınıflandırma yapılmıştır
+- Veri seti önce **One-Hot Encoding** ve **Standard Scaling** işlemlerinden geçirilmiş, ardından PCA uygulanmıştır
+- Toplam varyansın **%95'i** korunacak şekilde bileşen sayısı belirlenmiştir (`pca_variance=0.95`)
 
 #### 🧩 Seçilen Feature Grupları
 
-**Meteorolojik:**
+**Meteorolojik & Hava Durumu (Türetilmiş):**
 - Temperature (F)
 - Humidity (%)
 - Pressure (in)
 - Visibility (mi)
 - Wind Speed (mph)
-- Precipitation (in)
+- **Adverse_Weather** (Kodda türetilen: Rain, Snow, Storm vb. durumlar)
+- **Has_Precipitation** (Kodda türetilen: Yağış var/yok durumu)
 
 **Zamansal (Türetilmiş):**
 - Hour_of_Day
-- Is_Weekend_Day
-- During_Rush_Hour
-- Accident_Duration_Min
+- Is_Weekend_Day (Cumartesi/Pazar kontrolü)
+- During_Rush_Hour (Sabah 7-9, Akşam 16-18 saatleri)
+- Accident_Duration_Min (Bitiş ve Başlangıç zamanı farkı)
 
-**Yol & Yapı:**
-- Signal_Stop_Present
+**Yol & Yapısal Özellikler:**
+- Signal_Stop_Present (Trafik ışığı veya Dur tabelası varlığı)
 - Junction
-- High_Impact_Incident
+- **Distance(mi)** (Etki analizi ve outlier temizliği için kullanılmıştır)
+- High_Impact_Incident (Mesafe ve süreye bağlı yüksek etki göstergesi)
 
-*Not: Tüm bu özellikler PCA uygulanarak temel bileşenlere dönüştürülmüştür.*
+*Not: Kategorik değişkenler kodlandıktan ve sayısal veriler ölçeklendikten sonra tüm özellikler PCA ile dönüştürülmüştür.*
 
 #### 🤖 Kullanılan Modeller
 - Majority Class Classifier (Baseline)
@@ -88,21 +90,18 @@ Proje kapsamında 5 kişilik ekip, veri setini farklı bakış açılarıyla ele
 - Bagging ve XGBoost modelleri ile performans artırılmıştır
 - Özellikle Severity 2 ve Severity 3 sınıflarında iyileşme gözlenmiştir
 
-**Görsellerr:**
+**Görseller:**
 
 ![XGBoost Confusion Matrix](img/sila-xgboost-confusion.png)
 ![Logistic Regression PCA](img/sila-logistic-regressin-pca.png)
 ![Baseline Model](img/sila-baseline.png)
 ![Baseline Classifier](img/sila-baseline2.png)
 
-#### 🛠️ Ek Not
-Veri ön işleme adımları profesyonel bir pipeline yapısı ile uygulanmıştır:
-- Outlier Clipping
-- Missing Value Imputation
-- One-Hot Encoding
-
----
-
+#### 🛠️ Ek Not (Veri Ön İşleme Detayları)
+Kod yapısına uygun olarak aşağıdaki profesyonel pipeline adımları uygulanmıştır:
+1. **Outlier Clipping:** Sayısal değişkenler (Sıcaklık, Rüzgar, Mesafe vb.) **%1 ve %99 persentilleri** arasına sıkıştırılarak uç değerler baskılanmıştır.
+2. **Missing Value Imputation:** Sayısal veriler **medyan**, kategorik veriler **mod** değeri ile doldurulmuştur.
+3. **Encoding & Scaling:** Kategorik değişkenler `get_dummies` ile dönüştürülmüş, PCA öncesi `StandardScaler` ile standartlaştırma yapılmıştır.
 ### 👤 Üye 2: İlkay Özkan
 **Odak Alanı:** Boosting Algoritmaları & Hiperparametre Optimizasyonu
 
