@@ -103,37 +103,44 @@ Kod yapısına uygun olarak aşağıdaki profesyonel pipeline adımları uygulan
 2. **Missing Value Imputation:** Sayısal veriler **medyan**, kategorik veriler **mod** değeri ile doldurulmuştur.
 3. **Encoding & Scaling:** Kategorik değişkenler `get_dummies` ile dönüştürülmüş, PCA öncesi `StandardScaler` ile standartlaştırma yapılmıştır.
 ### 👤 Üye 2: İlkay Özkan
-**Odak Alanı:** Boosting Algoritmaları & Hiperparametre Optimizasyonu
+**Odak Alanı:** Boosting Algoritmaları, Metin Madenciliği & Gelişmiş Özellik Türetimi
 
 #### 🔍 Yaklaşım
-- Veri setindeki dengesizlik ve karmaşık ilişkiler hedeflenmiştir
-- Modern Gradient Boosting algoritmaları kullanılmıştır
-- GridSearchCV ile hiperparametre optimizasyonu yapılmıştır
+- Veri setindeki **"Description" (Açıklama)** ve **"Street" (Cadde)** gibi metin tabanlı sütunlar işlenerek modele yeni sinyaller kazandırılmıştır.
+- Kayıp **Sıcaklık (Temperature)** verileri, genelleme yerine ilgili **Şehrin (City)** medyan değeri ile doldurularak yerel iklim özellikleri korunmuştur.
+- Aykırı değerler (Outliers), istatistiksel yöntemlerle (Clipping) baskılanmıştır.
 
-#### 🧩 Feature Seçimi
-- Model, veri setindeki tüm belirleyici özellikleri kullanmıştır
-- Feature Importance analizi yapılmıştır
+#### 🧩 Türetilen Özel Feature Grupları
 
-**Öne Çıkan Faktörler:**
-- Coğrafi / Konumsal bilgiler
-- Zamansal değişkenler
+**1. Metin Madenciliği (Description Analizi):**
+*Kaza açıklamaları taranarak olayın karakteristiğine dair anahtar kelimelerden bayraklar (flags) oluşturulmuştur:*
+- **FEAT_Is_Road_Closed:** Yolun trafiğe kapalı olup olmadığı.
+- **FEAT_Is_Lane_Blocked:** Şeritlerin bloke olma durumu.
+- **FEAT_Is_Crash:** Metin içerisinde doğrudan "kaza" ifadesinin geçip geçmediği.
+- **FEAT_Is_Slowdown:** Trafik yavaşlaması veya dikkat uyarısı varlığı.
+
+**2. Yol & Altyapı Tipi (Street Analizi):**
+- **Is_Highway:** Cadde isminden yola çıkılarak Otoyol, Otoban (Hwy, Fwy, I-) tespiti.
+- **Is_Low_Speed_Zone:** Sokak, Cadde, Yolu (St, Ave, Ln) gibi düşük hızlı bölgelerin tespiti.
+
+**3. Zamansal Özellikler:**
+- **Is_Rush_Hour:** Hafta sonu hariç, sabah (07-09) ve akşam (15-18) yoğun saatleri.
+- **Duration(min):** Kazanın başlangıç ve bitiş zamanı arasındaki süre (Negatif değerler sıfırlanmıştır).
 
 #### 🤖 Kullanılan Modeller
 - Dummy Classifier (Baseline)
 - AdaBoost Classifier
 - CatBoost Classifier
 
-#### 📈 Sonuçlar
-- AdaBoost modeli optimize edilerek performans artırılmıştır
-- CatBoost, en yüksek doğruluk ve ROC-AUC değerlerine ulaşmıştır
-- Özellikle Severity 3 ve 4 tahminlerinde başarılıdır
+#### 📈 Sonuçlar ve Teknik Detaylar
+- **Veri Temizleme (Clipping):** Sıcaklık, Rüzgar Hızı, Mesafe gibi sayısal veriler **%1 ve %99** persentilleri arasına sıkıştırılarak uç değerlerin model üzerindeki negatif etkisi azaltılmıştır.
+- **Performans:** AdaBoost ile başlayan süreçte, **CatBoost** modeli özellikle metin tabanlı özelliklerin de katkısıyla karmaşık ilişkileri en iyi yakalayan model olmuştur.
+- **Severity 3 ve 4:** Yüksek ciddiyetli kazaların tahmininde belirgin başarı sağlanmıştır.
 
 **Görseller:**
 
 ![CatBoost Confusion Matrix](img/ilkay-catboost.png)
 ![CatBoost Feature Importance](img/ilkay-catboost-blok-grafiği.png)
-
----
 
 ### 👤 Üye 3: Ahmet Koç
 **Odak Alanı:** Zaman Serisi Analizi, Mekânsal Altyapı & Özellik Mühendisliği
@@ -161,8 +168,8 @@ Veri setindeki ham zaman ve konum verileri işlenerek modelin daha iyi öğreneb
 - **Was_Precipitation:** `Precipitation(in)` sütunundaki eksik veriler doldurulduktan sonra oluşturulan, kazada yağış olup olmadığını gösteren (True/False) özellik.
 
 #### 🤖 Kullanılan Modeller
-- K-Nearest Neighbors (KNN)
-- Naive Bayes
+- LightGBM
+- Stacking
 
 #### 📈 Sonuç ve Gözlemler
 - **Yağış Etkisi:** Yağışlı havalarda gerçekleşen kazaların ciddiyet (Severity) dağılımı görselleştirilmiş ve kuru havalara göre farkları analiz edilmiştir.
