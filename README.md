@@ -88,7 +88,7 @@ Proje kapsamında 5 kişilik ekip, veri setini farklı bakış açılarıyla ele
 - Bagging ve XGBoost modelleri ile performans artırılmıştır
 - Özellikle Severity 2 ve Severity 3 sınıflarında iyileşme gözlenmiştir
 
-**Görseller:**
+**Görsellerr:**
 
 ![XGBoost Confusion Matrix](img/sila-xgboost-confusion.png)
 ![Logistic Regression PCA](img/sila-logistic-regressin-pca.png)
