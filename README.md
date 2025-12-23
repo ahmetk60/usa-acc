@@ -1,4 +1,4 @@
-# 🇺🇸 ABD Trafik Kazaları Şiddet Tahmini ve Analizi
+**US ABD Trafik Kazaları Şiddet Tahmini ve Analizi**
 
 ![US Accidents Heatmap](img/heatmap-placeholder.png)
 *Python ile oluşturulmuş, ABD haritası üzerinde kaza yoğunluğunu gösteren ısı haritası*
@@ -136,7 +136,7 @@ Veri ön işleme adımları profesyonel bir pipeline yapısı ile uygulanmışt�
 
 ---
 
-### 👤 Üye 3: [İsim Soyisim]
+### 👤 Üye 3: Ahmet Koç
 **Odak Alanı:** Zaman ve Konum Analizi
 
 #### 🔍 Yaklaşım
@@ -157,7 +157,7 @@ Gece saatlerinde gerçekleşen kazaların şiddetinin, gündüze göre daha yük
 
 ---
 
-### 👤 Üye 4: [İsim Soyisim]
+### 👤 Üye 4: Rabia Nur Akdaş
 **Odak Alanı:** Tüm Sayısal Veriler & PCA
 
 #### 🔍 Yaklaşım
@@ -173,7 +173,7 @@ Boosting algoritmalarının bu veri setinde hem hızlı hem de yüksek performan
 
 ---
 
-### 👤 Üye 5: [İsim Soyisim]
+### 👤 Üye 5: İremnur Erbaş
 **Odak Alanı:** Metin Madenciliği (NLP – Description Sütunu)
 
 #### 🔍 Yaklaşım
@@ -223,7 +223,7 @@ jupyter notebook
 
 1. Sıla Karahan - PCA & Ensemble Models
 2. İlkay Özkan - Boosting Algorithms
-3. [İsim] - Time & Location Analysis
-4. [İsim] - Numerical Features & PCA
-5. [İsim] - NLP & Text Mining
+3. Ahmet Koç - Time & Location Analysis
+4. Rabia Nur Akdaş - Numerical Features & PCA
+5. İremnur Erbaş - NLP & Text Mining
 
