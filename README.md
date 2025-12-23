@@ -178,7 +178,7 @@ Veri setindeki ham zaman ve konum verileri işlenerek modelin daha iyi öğreneb
 ---
 
 ### 👤 Üye 4: Rabia Nur Akdaş
-**Odak Alanı:** Tüm Sayısal Veriler & PCA
+**Odak Alanı:** Tüm Sayısal Veriler 
 
 #### 🔍 Yaklaşım
 - Veri setindeki tüm nümerik değişkenler kullanılmıştır
