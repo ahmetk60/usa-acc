@@ -136,23 +136,37 @@ Kod yapısına uygun olarak aşağıdaki profesyonel pipeline adımları uygulan
 ---
 
 ### 👤 Üye 3: Ahmet Koç
-**Odak Alanı:** Zaman ve Konum Analizi
+**Odak Alanı:** Zaman Serisi Analizi, Mekânsal Altyapı & Özellik Mühendisliği
 
 #### 🔍 Yaklaşım
-Zamansal ve mekânsal değişkenler kullanılmıştır.
+Veri setindeki ham zaman ve konum verileri işlenerek modelin daha iyi öğrenebileceği "akıllı özelliklere" (Smart Features) dönüştürülmüştür.
+- **Zaman Segmentasyonu:** Günün saatleri, insan davranışlarına göre (Sabah, Öğle, Akşam, Gece) kategorize edilmiştir.
+- **Etkileşim Özellikleri (Interaction Features):** "Gece" ve "Hafta Sonu" gibi iki riskli durumun kesişimi analiz edilmiştir.
+- **Eksik Veri Yönetimi:** Yağış verisindeki eksikler 0 kabul edilip, yağışın miktarı yerine "varlığına" (binary) odaklanılmıştır.
 
-#### 🧩 Seçilen Feature'lar
-- Start_Time (Hour, Day, Month olarak ayrıştırıldı)
-- State
-- City
-- Timezone
+#### 🧩 Seçilen ve Türetilen Feature'lar
+
+**Gelişmiş Zamansal Özellikler:**
+- **Temel:** Hour, DayOfWeek, Month
+- **Is_Weekend:** Hafta sonu trafiğinin hafta içinden farkını yakalamak için.
+- **Is_Rush_Hour:** Trafik yoğunluğunun zirve yaptığı sabah (07-09) ve akşam (15-18) saatleri.
+- **Time_of_Day:** Günü 4 ana dilime ayıran kategorik veri (Morning, Afternoon, Evening, Night).
+- **Is_Night_Weekend:** En yüksek risk grubunu belirlemek için oluşturulan kombinasyon özelliği.
+
+**Yol ve Altyapı (Boolean Flags):**
+- Trafik akışını etkileyen fiziksel özellikler incelenmiştir:
+- `Traffic_Signal`, `Junction`, `Crossing`, `Stop`, `Station`, `Amenity`, `Bump`, `Give_Way` vb.
+
+**Hava Durumu (Türetilmiş):**
+- **Was_Precipitation:** `Precipitation(in)` sütunundaki eksik veriler doldurulduktan sonra oluşturulan, kazada yağış olup olmadığını gösteren (True/False) özellik.
 
 #### 🤖 Kullanılan Modeller
 - K-Nearest Neighbors (KNN)
 - Naive Bayes
 
-#### 📈 Sonuç
-Gece saatlerinde gerçekleşen kazaların şiddetinin, gündüze göre daha yüksek olduğu gözlemlenmiştir.
+#### 📈 Sonuç ve Gözlemler
+- **Yağış Etkisi:** Yağışlı havalarda gerçekleşen kazaların ciddiyet (Severity) dağılımı görselleştirilmiş ve kuru havalara göre farkları analiz edilmiştir.
+- **Zaman Dilimleri:** Gece saatleri (Night) ve hafta sonlarının kesişiminin (Is_Night_Weekend) kaza dinamikleri üzerindeki ayırt edici etkisi gözlemlenmiştir.
 
 ---
 
@@ -164,13 +178,11 @@ Gece saatlerinde gerçekleşen kazaların şiddetinin, gündüze göre daha yük
 - PCA ile boyut indirgeme yapılmıştır
 
 #### 🤖 Kullanılan Modeller
-- XGBoost
+- Stacking
 - LightGBM
 
 #### 📈 Sonuç
 Boosting algoritmalarının bu veri setinde hem hızlı hem de yüksek performanslı olduğu görülmüştür.
-
----
 
 ### 👤 Üye 5: İremnur Erbaş
 **Odak Alanı:** Metin Madenciliği (NLP – Description Sütunu)
