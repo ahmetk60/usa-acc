@@ -1,1 +1,239 @@
-🚗 ABD Trafik Kazaları Şiddet Tahmini ve Analizi(Not: Buraya Python ile oluşturduğunuz harita görselini veya proje banner'ını koyunuz.)📌 Proje ÖzetiBu proje, ABD genelindeki trafik kazalarını içeren geniş kapsamlı bir veri seti kullanılarak, kazaların şiddet derecesini (Severity 1-4) tahmin etmeyi amaçlayan bir veri madenciliği grup çalışmasıdır.Proje kapsamında 5 kişilik ekibimiz, veri setini farklı açılardan ele almıştır. Her ekip üyesi, problemin farklı boyutlarına odaklanarak farklı öznitelik grupları (feature subsets) seçmiş ve farklı makine öğrenmesi algoritmaları ile sınıflandırma performansı ölçmüştür.Temel Amaç: Kaza şiddetini en iyi açıklayan faktörleri tespit etmek ve en yüksek başarıyı sağlayan model mimarisini belirlemektir.📊 Veri Seti HakkındaKaynak: Kaggle US Accidents DatasetBoyut: ~7 Milyon Satır, 46 SütunHedef Değişken (Target): Severity1: Hafif (Maddi Hasarlı)2: Orta (Yaralanmalı/Tıkanıklık Yaratan)3: Ciddi4: Çok Ciddi / Ölümcül🖼️ Proje Görselleri ve EDAVeri setinin genel yapısına dair keşifçi veri analizi görselleri:1. Hedef Değişken DağılımıVeri setindeki kaza şiddetlerinin dağılımı (Class Imbalance durumu):2. Coğrafi DağılımKazaların ABD haritası üzerindeki yoğunluk analizi:(Buraya oluşturacağınız harita görseli gelecek)👨‍💻 Ekip Çalışması ve YöntemlerBu bölümde her üyenin odaklandığı alan, kullandığı feature setleri ve elde ettiği sonuçlar detaylandırılmıştır.👤 Üye 1: Sıla - [PCA ile Boyut İndirgeme ve Ensemble Modeller]Yaklaşım:Büyük veri seti (2 Milyon örneklem) üzerinde çalışılmış, hesaplama maliyetini düşürmek ve gürültüyü azaltmak amacıyla PCA (Principal Component Analysis) tekniği uygulanarak varyansın %95'i korunmuştur. Sınıflandırma için varyansı düşük, güçlü topluluk (ensemble) algoritmaları tercih edilmiştir.Seçilen Feature'lar:Meteorolojik: Temperature(F), Humidity(%), Pressure(in), Visibility(mi), Wind_Speed(mph), Precipitation(in)Zamansal (Feature Engineering): Hour_of_Day, Is_Weekend_Day, During_Rush_Hour (Yoğun saatler), Accident_Duration_MinYol & Yapı: Signal_Stop_Present, Junction, High_Impact_IncidentNot: Bu özellikler işlendikten sonra PCA ile temel bileşenlere dönüştürülmüştür.Kullanılan Modeller:Majority Class Classifier: (Baseline/Referans model)Logistic Regression: (PCA sonrası lineer ayrım performansı)Bagging Classifier: (Decision Tree tabanlı, varyans düşürücü)XGBoost: (Yüksek performanslı gradient boosting)Elde Edilen Sonuç:PCA uygulanmış veri setinde Logistic Regression ile %60.5 doğruluk elde edilmiştir. Bagging ve XGBoost modelleri ile bu skorun üzerine çıkılarak, özellikle Severity 2 ve Severity 3 sınıflarının ayrımında iyileştirme sağlanmıştır.Model Çıktıları:| Confusion Matrix (XGBoost) | PCA Lineer Ayrım || :---: | :---: ||  |  |Baseline Model 1Baseline Model 2👤 Üye 2: İlkay Özkan - [Boosting Algoritmaları ve Hiperparametre Optimizasyonu]Yaklaşım:Veri setindeki dengesizliği (imbalance) ve karmaşık ilişkileri yönetmek için modern Gradient Boosting kütüphaneleri tercih edilmiştir. Özellikle kategorik değişkenleri otomatik işleyebilen CatBoost ve zayıf öğrenicileri güçlendiren AdaBoost algoritmaları üzerinde durulmuştur. GridSearchCV kullanılarak modellerin en iyi parametreleri (learning rate, depth vb.) optimize edilmiştir.Seçilen Feature'lar:Model, veri setindeki tüm belirleyici özellikleri kullanmış ve Feature Importance analizi ile en etkili faktörleri belirlemiştir.Öne Çıkanlar: Coğrafi/Konumsal veriler ve zaman bilgileri model tarafından en kritik faktörler olarak belirlenmiştir.Kullanılan Modeller:Dummy Classifier: (Baz model)AdaBoost Classifier: (Decision Tree tabanlı)CatBoost Classifier: (Kategorik veri dostu, yüksek performans)Elde Edilen Sonuç:AdaBoost modeli optimize edilerek varsayılan ayarlara göre başarım artırılmıştır. CatBoost modeli ile projedeki en yüksek doğruluk ve ayırt edicilik (ROC-AUC) değerlerine ulaşılmıştır. Confusion Matrix incelendiğinde, ciddi kazaları (Severity 3 ve 4) tahmin etme başarısı dikkat çekicidir.Model Çıktıları:| CatBoost ROC & Confusion | Feature Importance || :---: | :---: ||  |  |👤 Üye 3: [İsim Soyisim] - [Zaman ve Konum Analizi]Yaklaşım:Kazanın gerçekleştiği eyalet, saat, gün ve ay gibi zamansal/mekansal verilerin şiddet üzerindeki etkisi analiz edilmiştir.Seçilen Feature'lar:Start_Time (Feature Engineering: Hour, Day, Month)State, City, TimezoneKullanılan Modeller:K-Nearest Neighbors (KNN)Naive BayesElde Edilen Sonuç:Gece saatlerinde ve belirli eyaletlerde gerçekleşen kazaların şiddetinin, gündüze ve diğer bölgelere göre istatistiksel olarak daha yüksek olduğu saptanmıştır.👤 Üye 4: [İsim Soyisim] - [Tüm Sayısal Veriler & Boyut İndirgeme]Yaklaşım:Veri setindeki yalnızca nümerik değerler alınıp, PCA (Principal Component Analysis) ile boyut indirgeme yapılmış ve model karmaşıklığı azaltılmıştır.Kullanılan Modeller:XGBoostLightGBMElde Edilen Sonuç:Boosting algoritmalarının (özellikle LightGBM), büyük veri setlerinde eğitim süresi açısından en verimli modeller olduğu ve yüksek doğruluk sağladığı görülmüştür.👤 Üye 5: [İsim Soyisim] - [NLP & Metin Madenciliği]Yaklaşım:Veri setindeki Description sütunu kullanılarak NLP (Doğal Dil İşleme) teknikleri ile kaza açıklamalarından şiddet tahmini yapılmıştır.Kullanılan Modeller:TF-IDF Vektörleştirme + Random ForestNeural Networks (Yapay Sinir Ağları)Elde Edilen Sonuç:Kaza açıklamalarında geçen "blocked", "closed", "heavy" gibi anahtar kelimelerin yüksek şiddetli (Severity 3-4) kazalarla güçlü bir ilişkisi olduğu görülmüştür.🏆 Sonuçların KarşılaştırılmasıEkip üyelerinin geliştirdiği en iyi modellerin performans özeti:
+# 🇺🇸 ABD Trafik Kazaları Şiddet Tahmini ve Analizi
+
+> **İmage Önerisi:** Python ile oluşturulmuş, ABD haritası üzerinde kaza yoğunluğunu gösteren şık bir ısı haritası (heatmap).
+
+---
+
+## 📌 Proje Özeti
+
+Bu proje, ABD genelindeki trafik kazalarını içeren geniş kapsamlı bir veri seti kullanılarak kazaların şiddet derecesini (**Severity 1–4**) tahmin etmeyi amaçlayan bir **veri madenciliği grup çalışmasıdır**.
+
+Proje kapsamında **5 kişilik ekip**, veri setini farklı bakış açılarıyla ele almıştır. Her ekip üyesi:
+
+* Farklı **feature (öznitelik) grupları** seçmiş,
+* Farklı **makine öğrenmesi algoritmaları** kullanmış,
+* Modellerin **sınıflandırma performanslarını** karşılaştırmıştır.
+
+Amaç, **kaza şiddetini en iyi açıklayan faktörleri** ve **en başarılı model yaklaşımlarını** belirlemektir.
+
+---
+
+## 📊 Veri Seti Hakkında
+
+* **Kaynak:** Kaggle – US Accidents Dataset *(link eklenecek)*
+* **Boyut:** ~7 Milyon Satır, 46 Sütun
+* **Hedef Değişken (Target):** `Severity`
+
+| Değer | Açıklama            |
+| ----- | ------------------- |
+| 1     | Hafif               |
+| 2     | Orta                |
+| 3     | Ciddi               |
+| 4     | Çok Ciddi / Ölümcül |
+
+---
+
+## 🖼️ Proje Görselleri
+
+### 🎯 Hedef Değişken Dağılımı
+
+![Hedef Değişken Dağılımı](img/hedef-degisken-dagilimi.png)
+
+### 🌍 Coğrafi Dağılım
+
+> **Not:** Coğrafi dağılım görseli eklenecektir.
+
+---
+
+## 👨‍💻 Ekip Çalışması ve Yöntemler
+
+Bu bölümde, her ekip üyesinin odaklandığı alan, kullandığı özellik grupları ve uyguladığı algoritmalar detaylı şekilde açıklanmaktadır.
+
+---
+
+## 👤 Üye 1: Sıla
+
+**Odak Alanı:** PCA ile Boyut İndirgeme & Ensemble Modeller
+
+### 🔍 Yaklaşım
+
+* Yaklaşık **2 milyon örneklem** üzerinde çalışılmıştır.
+* Hesaplama maliyetini düşürmek ve gürültüyü azaltmak için **PCA (Principal Component Analysis)** uygulanmıştır.
+* Toplam varyansın **%95’i korunmuştur**.
+* Güçlü **ensemble modeller** ile sınıflandırma yapılmıştır.
+
+### 🧩 Seçilen Feature Grupları
+
+**Meteorolojik:**
+
+* Temperature (F)
+* Humidity (%)
+* Pressure (in)
+* Visibility (mi)
+* Wind Speed (mph)
+* Precipitation (in)
+
+**Zamansal (Türetilmiş):**
+
+* Hour_of_Day
+* Is_Weekend_Day
+* During_Rush_Hour
+* Accident_Duration_Min
+
+**Yol & Yapı:**
+
+* Signal_Stop_Present
+* Junction
+* High_Impact_Incident
+
+> *Not:* Tüm bu özellikler PCA uygulanarak temel bileşenlere dönüştürülmüştür.
+
+### 🤖 Kullanılan Modeller
+
+* Majority Class Classifier *(Baseline)*
+* Logistic Regression *(PCA sonrası doğrusal ayırıcı)*
+* Bagging Classifier *(Decision Tree tabanlı)*
+* XGBoost *(Gradient Boosting)*
+
+### 📈 Sonuçlar
+
+* Logistic Regression (PCA sonrası):
+  **Accuracy:** %60.5
+  **F1-Score:** 0.58
+
+* Bagging ve XGBoost modelleri ile performans artırılmıştır.
+
+* Özellikle **Severity 2** ve **Severity 3** sınıflarında iyileşme gözlenmiştir.
+
+**Görseller:**
+
+![XGBoost Confusion Matrix](img/sila-xgboost-confusion.png)
+![Logistic Regression PCA](img/sila-logistic-regressin-pca.png)
+![Baseline Model](img/sila-baseline.png)
+![Baseline Model 2](img/sila-baseline2.png)
+
+### 🛠️ Ek Not
+
+Veri ön işleme adımları profesyonel bir **pipeline** yapısı ile uygulanmıştır:
+
+* Outlier Clipping
+* Missing Value Imputation
+* One-Hot Encoding
+
+---
+
+## 👤 Üye 2: İlkay Özkan
+
+**Odak Alanı:** Boosting Algoritmaları & Hiperparametre Optimizasyonu
+
+### 🔍 Yaklaşım
+
+* Veri setindeki **dengesizlik** ve **karmaşık ilişkiler** hedeflenmiştir.
+* Modern **Gradient Boosting** algoritmaları kullanılmıştır.
+* **GridSearchCV** ile hiperparametre optimizasyonu yapılmıştır.
+
+### 🧩 Feature Seçimi
+
+* Model, veri setindeki **tüm belirleyici özellikleri** kullanmıştır.
+* **Feature Importance** analizi yapılmıştır.
+
+**Öne Çıkan Faktörler:**
+
+* Coğrafi / Konumsal bilgiler
+* Zamansal değişkenler
+
+### 🤖 Kullanılan Modeller
+
+* Dummy Classifier *(Baseline)*
+* AdaBoost Classifier
+* CatBoost Classifier
+
+### 📈 Sonuçlar
+
+* AdaBoost modeli optimize edilerek performans artırılmıştır.
+* **CatBoost**, en yüksek doğruluk ve **ROC-AUC** değerlerine ulaşmıştır.
+* Özellikle **Severity 3 ve 4** tahminlerinde başarılıdır.
+
+**Görseller:**
+
+![CatBoost Confusion Matrix](img/ilkay-catboost.png)
+![CatBoost Feature Importance](img/ilkay-catboost-blok-grafiği.png)
+
+---
+
+## 👤 Üye 3: [İsim Soyisim]
+
+**Odak Alanı:** Zaman ve Konum Analizi
+
+### 🔍 Yaklaşım
+
+* Zamansal ve mekânsal değişkenler kullanılmıştır.
+
+### 🧩 Seçilen Feature’lar
+
+* Start_Time *(Hour, Day, Month olarak ayrıştırıldı)*
+* State
+* City
+* Timezone
+
+### 🤖 Kullanılan Modeller
+
+* K-Nearest Neighbors (KNN)
+* Naive Bayes
+
+### 📈 Sonuç
+
+* Gece saatlerinde gerçekleşen kazaların şiddetinin, gündüze göre daha yüksek olduğu gözlemlenmiştir.
+
+---
+
+## 👤 Üye 4: [İsim Soyisim]
+
+**Odak Alanı:** Tüm Sayısal Veriler & PCA
+
+### 🔍 Yaklaşım
+
+* Veri setindeki tüm **nümerik değişkenler** kullanılmıştır.
+* PCA ile boyut indirgeme yapılmıştır.
+
+### 🤖 Kullanılan Modeller
+
+* XGBoost
+* LightGBM
+
+### 📈 Sonuç
+
+* Boosting algoritmalarının bu veri setinde hem **hızlı** hem de **yüksek performanslı** olduğu görülmüştür.
+
+> **Görsel:** Confusion Matrix
+
+---
+
+## 👤 Üye 5: [İsim Soyisim]
+
+**Odak Alanı:** Metin Madenciliği (NLP – Description Sütunu)
+
+### 🔍 Yaklaşım
+
+* `Description` sütunu kullanılarak **Doğal Dil İşleme (NLP)** uygulanmıştır.
+
+### 🤖 Kullanılan Modeller
+
+* TF-IDF + Random Forest
+* Neural Networks (Basit YSA)
+
+### 📈 Sonuç
+
+* "blocked", "closed" gibi kelimelerin **yüksek şiddetli kazalarla** güçlü ilişkisi olduğu tespit edilmiştir.
+
+---
+
+## 📌 Genel Değerlendirme
+
+* Boosting tabanlı modeller (CatBoost, XGBoost, LightGBM) genel olarak en başarılı yaklaşımlar olmuştur.
+* Zamansal, mekânsal ve meteorolojik faktörler kaza şiddetini doğrudan etkilemektedir.
+* Metin verileri, yardımcı fakat anlamlı katkılar sağlamıştır.
+
+---
+
+
