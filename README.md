@@ -18,7 +18,7 @@ Proje kapsamında 5 kişilik ekip, veri setini farklı bakış açılarıyla ele
 
 ## 📊 Veri Seti Hakkında
 
-- **Kaynak:** [Kaggle – US Accidents Dataset](https://www.kaggle.com/)
+- **Kaynak:** [Kaggle – US Accidents Dataset](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)
 - **Boyut:** ~7 Milyon Satır, 46 Sütun
 - **Hedef Değişken (Target):** Severity
 
