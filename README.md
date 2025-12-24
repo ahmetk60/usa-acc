@@ -176,75 +176,48 @@ Veri setindeki ham zaman ve konum verileri işlenerek modelin daha iyi öğreneb
 - **Zaman Dilimleri:** Gece saatleri (Night) ve hafta sonlarının kesişiminin (Is_Night_Weekend) kaza dinamikleri üzerindeki ayırt edici etkisi gözlemlenmiştir.
 
 ---
+### 👤 Üye 4: Rabia Nur Akdaş
+**Odak Alanı:** Ensemble Learning (Topluluk Öğrenmesi) & PCA ile Boyut İndirgeme
 
-👤 Üye
-
-Rabia Nur Akdaş
-Odak Alanı: Ensemble Learning (Topluluk Öğrenmesi) & PCA ile Boyut İndirgeme
-
-🔍 Proje Yaklaşımı
+#### 🔍 Yaklaşım
 
 Bu projede yaklaşık 2.000.000 örneklemden oluşan büyük ölçekli bir veri seti üzerinde trafik kazası şiddet tahmini yapılmıştır.
 
 Amaç;
-
-Gürültüyü azaltmak,
-
-Hesaplama maliyetini düşürmek,
-
-Model performansını artırmaktır.
-
+-Gürültüyü azaltmak,
+-Hesaplama maliyetini düşürmek,
+-Model performansını artırmaktır.
 Bu doğrultuda PCA (Principal Component Analysis) kullanılarak boyut indirgeme uygulanmıştır.
 
-🔧 Ön İşleme Akışı
+### 🔧 Ön İşleme Akışı
 
 StandardScaler ile tüm sayısal özellikler ölçeklendirilmiştir.
-
 PCA, varyansın %95’ini koruyacak şekilde uygulanmıştır.
-
 Sınıf dengesizliği problemine karşı modelleme öncesinde dengeleme stratejileri dikkate alınmıştır.
 
-🧩 Seçilen Feature Grupları
-
+### 🧩 Seçilen Feature Grupları
 Toplam 16 temel özellik üzerinde temizleme, kodlama ve PCA işlemleri gerçekleştirilmiştir.
 
-🌦️ Meteorolojik & Hava Durumu
-
+**🌦️ Meteorolojik & Hava Durumu**
 Temperature(F)
-
 Humidity(%)
-
 Pressure(in)
-
 Visibility(mi)
-
 Wind_Speed(mph)
-
 Weather_Condition
-
-🕒 Zamansal & Çevresel
-
+**🕒 Zamansal & Çevresel**
 Start_Time
-
 Sunrise_Sunset
-
-🛣️ Yol & Yapısal Özellikler
-
+**🛣️ Yol & Yapısal Özellikler**
 Traffic_Signal
-
 Stop
-
 Give_Way
-
 Traffic_Calming
-
 Roundabout
-
 Crossing
-
 Junction
 
-🤖 Kullanılan Modeller
+### 🤖 Kullanılan Modeller
 
 Projede farklı makine öğrenmesi yaklaşımları denenmiş ve karşılaştırılmıştır:
 
@@ -256,7 +229,7 @@ HistGradientBoosting Classifier
 
 Logistic Regression (Baseline / Karşılaştırma modeli)
 
-📈 Model Performans Sonuçları
+**📈 Model Performans Sonuçları**
 🔹 XGBoost
 
 Accuracy: %59.4
@@ -283,17 +256,13 @@ XGBoost ve Extra Trees modelleri birbirine oldukça yakın sonuçlar vermiştir.
 🛠️ Ek Notlar – Veri Ön İşleme Detayları
 
 Projede gelişmiş ve modüler bir pipeline yapısı kullanılmıştır:
-
-Eksik Veri İşleme:
+**Eksik Veri İşleme:**
 Sayısal ve kategorik değişkenler için ayrı imputasyon stratejileri uygulanmıştır.
-
-Feature Selection:
+**Feature Selection:**
 Yol durumu, hava koşulları ve zaman bilgisini temsil eden en kritik 16 özellik manuel olarak seçilmiştir.
-
-Encoding & Scaling:
+**Encoding & Scaling:**
 Kategorik değişkenler sayısal formata dönüştürülmüş, PCA öncesinde tüm veriler aynı ölçeğe getirilmiştir.
-
-Stratified K-Fold Cross Validation:
+**Stratified K-Fold Cross Validation:**
 Modellerin genelleme yeteneğini doğru ölçebilmek için katmanlı çapraz doğrulama kullanılmıştır.
 
 ### 👤 Üye 5: İremnur Erbaş
