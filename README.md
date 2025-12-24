@@ -179,7 +179,7 @@ Veri setindeki ham zaman ve konum verileri işlenerek modelin daha iyi öğreneb
 ### 👤 Üye 4: Rabia Nur Akdaş
 **Odak Alanı:** Ensemble Learning (Topluluk Öğrenmesi) & PCA ile Boyut İndirgeme
 
-#### 🔍 Yaklaşım
+### 🔍 Yaklaşım
 
 Bu projede yaklaşık 2.000.000 örneklemden oluşan büyük ölçekli bir veri seti üzerinde trafik kazası şiddet tahmini yapılmıştır.
 
