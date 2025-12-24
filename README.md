@@ -177,19 +177,124 @@ Veri setindeki ham zaman ve konum verileri işlenerek modelin daha iyi öğreneb
 
 ---
 
-### 👤 Üye 4: Rabia Nur Akdaş
-**Odak Alanı:** Tüm Sayısal Veriler 
+👤 Üye
 
-#### 🔍 Yaklaşım
-- Veri setindeki tüm nümerik değişkenler kullanılmıştır
-- PCA ile boyut indirgeme yapılmıştır
+Rabia Nur Akdaş
+Odak Alanı: Ensemble Learning (Topluluk Öğrenmesi) & PCA ile Boyut İndirgeme
 
-#### 🤖 Kullanılan Modeller
-- Stacking
-- LightGBM
+🔍 Proje Yaklaşımı
 
-#### 📈 Sonuç
-Boosting algoritmalarının bu veri setinde hem hızlı hem de yüksek performanslı olduğu görülmüştür.
+Bu projede yaklaşık 2.000.000 örneklemden oluşan büyük ölçekli bir veri seti üzerinde trafik kazası şiddet tahmini yapılmıştır.
+
+Amaç;
+
+Gürültüyü azaltmak,
+
+Hesaplama maliyetini düşürmek,
+
+Model performansını artırmaktır.
+
+Bu doğrultuda PCA (Principal Component Analysis) kullanılarak boyut indirgeme uygulanmıştır.
+
+🔧 Ön İşleme Akışı
+
+StandardScaler ile tüm sayısal özellikler ölçeklendirilmiştir.
+
+PCA, varyansın %95’ini koruyacak şekilde uygulanmıştır.
+
+Sınıf dengesizliği problemine karşı modelleme öncesinde dengeleme stratejileri dikkate alınmıştır.
+
+🧩 Seçilen Feature Grupları
+
+Toplam 16 temel özellik üzerinde temizleme, kodlama ve PCA işlemleri gerçekleştirilmiştir.
+
+🌦️ Meteorolojik & Hava Durumu
+
+Temperature(F)
+
+Humidity(%)
+
+Pressure(in)
+
+Visibility(mi)
+
+Wind_Speed(mph)
+
+Weather_Condition
+
+🕒 Zamansal & Çevresel
+
+Start_Time
+
+Sunrise_Sunset
+
+🛣️ Yol & Yapısal Özellikler
+
+Traffic_Signal
+
+Stop
+
+Give_Way
+
+Traffic_Calming
+
+Roundabout
+
+Crossing
+
+Junction
+
+🤖 Kullanılan Modeller
+
+Projede farklı makine öğrenmesi yaklaşımları denenmiş ve karşılaştırılmıştır:
+
+XGBoost ⭐ (En iyi performans)
+
+Extra Trees Classifier (Random Forest varyasyonu)
+
+HistGradientBoosting Classifier
+
+Logistic Regression (Baseline / Karşılaştırma modeli)
+
+📈 Model Performans Sonuçları
+🔹 XGBoost
+
+Accuracy: %59.4
+
+F1-Score: 0.64
+
+🔹 Extra Trees Classifier
+
+Accuracy: %59.2
+
+F1-Score: 0.64
+
+AUC: 0.64
+
+🔹 Logistic Regression
+
+Accuracy: %45.2
+
+F1-Score: 0.52
+
+📌 Değerlendirme:
+XGBoost ve Extra Trees modelleri birbirine oldukça yakın sonuçlar vermiştir. Ancak XGBoost, marjinal farkla en başarılı model olarak öne çıkmıştır.
+
+🛠️ Ek Notlar – Veri Ön İşleme Detayları
+
+Projede gelişmiş ve modüler bir pipeline yapısı kullanılmıştır:
+
+Eksik Veri İşleme:
+Sayısal ve kategorik değişkenler için ayrı imputasyon stratejileri uygulanmıştır.
+
+Feature Selection:
+Yol durumu, hava koşulları ve zaman bilgisini temsil eden en kritik 16 özellik manuel olarak seçilmiştir.
+
+Encoding & Scaling:
+Kategorik değişkenler sayısal formata dönüştürülmüş, PCA öncesinde tüm veriler aynı ölçeğe getirilmiştir.
+
+Stratified K-Fold Cross Validation:
+Modellerin genelleme yeteneğini doğru ölçebilmek için katmanlı çapraz doğrulama kullanılmıştır.
 
 ### 👤 Üye 5: İremnur Erbaş
 **Odak Alanı:** Metin Madenciliği (NLP – Description Sütunu)
