@@ -1,0 +1,321 @@
+## US ABD Trafik Kazaları Şiddet Tahmini ve Analizi
+
+![US Accidents Heatmap](img/heatmap-placeholder.png)
+**Python ile oluşturulmuş, ABD haritası üzerinde kaza yoğunluğunu gösteren ısı haritası**
+
+## 📌 Proje Özeti
+
+Bu proje, ABD genelindeki trafik kazalarını içeren geniş kapsamlı bir veri seti kullanılarak kazaların şiddet derecesini (Severity 1–4) tahmin etmeyi amaçlayan bir veri madenciliği grup çalışmasıdır.
+
+Proje kapsamında 5 kişilik ekip, veri setini farklı bakış açılarıyla ele almıştır. Her ekip üyesi:
+- Farklı feature (öznitelik) grupları seçmiş
+- Farklı makine öğrenmesi algoritmaları kullanmış
+- Modellerin sınıflandırma performanslarını karşılaştırmıştır
+
+**Amaç:** Kaza şiddetini en iyi açıklayan faktörleri ve en başarılı model yaklaşımlarını belirlemek.
+
+---
+
+## 📊 Veri Seti Hakkında
+
+- **Kaynak:** [Kaggle – US Accidents Dataset](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)
+- **Boyut:** ~7 Milyon Satır, 46 Sütun
+- **Hedef Değişken (Target):** Severity
+
+| Değer | Açıklama |
+|-------|----------|
+| 1 | Hafif |
+| 2 | Orta |
+| 3 | Ciddi |
+| 4 | Çok Ciddi / Ölümcül |
+
+---
+
+## 🖼️ Veri Görselleştirmeleri
+
+### 🎯 Hedef Değişken Dağılımı
+![Hedef Değişken Dağılımı](img/hedef-degisken-dagilimi.png)
+
+### 🌍 Coğrafi Dağılım
+*Not: Coğrafi dağılım görseli eklenecektir.*
+
+---
+
+## 👨‍💻 Ekip Çalışması ve Yöntemler
+
+### 👤 Üye 1: Sıla Karahan
+**Odak Alanı:** PCA ile Boyut İndirgeme & Ensemble Modeller
+
+#### 🔍 Yaklaşım
+- Yaklaşık 2 milyon örneklem üzerinde çalışılmıştır
+- Hesaplama maliyetini düşürmek ve gürültüyü azaltmak için **PCA (Principal Component Analysis)** uygulanmıştır
+- Veri seti önce **One-Hot Encoding** ve **Standard Scaling** işlemlerinden geçirilmiş, ardından PCA uygulanmıştır
+- Toplam varyansın **%95'i** korunacak şekilde bileşen sayısı belirlenmiştir (`pca_variance=0.95`)
+
+#### 🧩 Seçilen Feature Grupları
+
+**Meteorolojik & Hava Durumu (Türetilmiş):**
+- Temperature (F)
+- Humidity (%)
+- Pressure (in)
+- Visibility (mi)
+- Wind Speed (mph)
+- **Adverse_Weather** (Kodda türetilen: Rain, Snow, Storm vb. durumlar)
+- **Has_Precipitation** (Kodda türetilen: Yağış var/yok durumu)
+
+**Zamansal (Türetilmiş):**
+- Hour_of_Day
+- Is_Weekend_Day (Cumartesi/Pazar kontrolü)
+- During_Rush_Hour (Sabah 7-9, Akşam 16-18 saatleri)
+- Accident_Duration_Min (Bitiş ve Başlangıç zamanı farkı)
+
+**Yol & Yapısal Özellikler:**
+- Signal_Stop_Present (Trafik ışığı veya Dur tabelası varlığı)
+- Junction
+- **Distance(mi)** (Etki analizi ve outlier temizliği için kullanılmıştır)
+- High_Impact_Incident (Mesafe ve süreye bağlı yüksek etki göstergesi)
+
+*Not: Kategorik değişkenler kodlandıktan ve sayısal veriler ölçeklendikten sonra tüm özellikler PCA ile dönüştürülmüştür.*
+
+#### 🤖 Kullanılan Modeller
+- Majority Class Classifier (Baseline)
+- Logistic Regression (PCA sonrası doğrusal ayırıcı)
+- Bagging Classifier (Decision Tree tabanlı)
+- XGBoost (Gradient Boosting)
+
+#### 📈 Sonuçlar
+- **Logistic Regression (PCA sonrası):**
+  - Accuracy: %60.5
+  - F1-Score: 0.58
+- Bagging ve XGBoost modelleri ile performans artırılmıştır
+- Özellikle Severity 2 ve Severity 3 sınıflarında iyileşme gözlenmiştir
+
+**Görseller:**
+
+![XGBoost Confusion Matrix](img/sila-xgboost-confusion.png)
+![Logistic Regression PCA](img/sila-logistic-regressin-pca.png)
+![Baseline Model](img/sila-baseline.png)
+![Baseline Classifier](img/sila-baseline2.png)
+
+#### 🛠️ Ek Not (Veri Ön İşleme Detayları)
+Kod yapısına uygun olarak aşağıdaki profesyonel pipeline adımları uygulanmıştır:
+1. **Outlier Clipping:** Sayısal değişkenler (Sıcaklık, Rüzgar, Mesafe vb.) **%1 ve %99 persentilleri** arasına sıkıştırılarak uç değerler baskılanmıştır.
+2. **Missing Value Imputation:** Sayısal veriler **medyan**, kategorik veriler **mod** değeri ile doldurulmuştur.
+3. **Encoding & Scaling:** Kategorik değişkenler `get_dummies` ile dönüştürülmüş, PCA öncesi `StandardScaler` ile standartlaştırma yapılmıştır.
+### 👤 Üye 2: İlkay Özkan
+**Odak Alanı:** Boosting Algoritmaları, Metin Madenciliği & Gelişmiş Özellik Türetimi
+
+#### 🔍 Yaklaşım
+- Veri setindeki **"Description" (Açıklama)** ve **"Street" (Cadde)** gibi metin tabanlı sütunlar işlenerek modele yeni sinyaller kazandırılmıştır.
+- Kayıp **Sıcaklık (Temperature)** verileri, genelleme yerine ilgili **Şehrin (City)** medyan değeri ile doldurularak yerel iklim özellikleri korunmuştur.
+- Aykırı değerler (Outliers), istatistiksel yöntemlerle (Clipping) baskılanmıştır.
+
+#### 🧩 Türetilen Özel Feature Grupları
+
+**1. Metin Madenciliği (Description Analizi):**
+*Kaza açıklamaları taranarak olayın karakteristiğine dair anahtar kelimelerden bayraklar (flags) oluşturulmuştur:*
+- **FEAT_Is_Road_Closed:** Yolun trafiğe kapalı olup olmadığı.
+- **FEAT_Is_Lane_Blocked:** Şeritlerin bloke olma durumu.
+- **FEAT_Is_Crash:** Metin içerisinde doğrudan "kaza" ifadesinin geçip geçmediği.
+- **FEAT_Is_Slowdown:** Trafik yavaşlaması veya dikkat uyarısı varlığı.
+
+**2. Yol & Altyapı Tipi (Street Analizi):**
+- **Is_Highway:** Cadde isminden yola çıkılarak Otoyol, Otoban (Hwy, Fwy, I-) tespiti.
+- **Is_Low_Speed_Zone:** Sokak, Cadde, Yolu (St, Ave, Ln) gibi düşük hızlı bölgelerin tespiti.
+
+**3. Zamansal Özellikler:**
+- **Is_Rush_Hour:** Hafta sonu hariç, sabah (07-09) ve akşam (15-18) yoğun saatleri.
+- **Duration(min):** Kazanın başlangıç ve bitiş zamanı arasındaki süre (Negatif değerler sıfırlanmıştır).
+
+#### 🤖 Kullanılan Modeller
+- Dummy Classifier (Baseline)
+- AdaBoost Classifier
+- CatBoost Classifier
+
+#### 📈 Sonuçlar ve Teknik Detaylar
+- **Veri Temizleme (Clipping):** Sıcaklık, Rüzgar Hızı, Mesafe gibi sayısal veriler **%1 ve %99** persentilleri arasına sıkıştırılarak uç değerlerin model üzerindeki negatif etkisi azaltılmıştır.
+- **Performans:** AdaBoost ile başlayan süreçte, **CatBoost** modeli özellikle metin tabanlı özelliklerin de katkısıyla karmaşık ilişkileri en iyi yakalayan model olmuştur.
+- **Severity 3 ve 4:** Yüksek ciddiyetli kazaların tahmininde belirgin başarı sağlanmıştır.
+
+**Görseller:**
+
+![CatBoost Confusion Matrix](img/ilkay-catboost.png)
+![CatBoost Feature Importance](img/ilkay-catboost-blok-grafiği.png)
+
+### 👤 Üye 3: Ahmet Koç
+**Odak Alanı:** Zaman Serisi Analizi, Mekânsal Altyapı & Özellik Mühendisliği
+
+#### 🔍 Yaklaşım
+Veri setindeki ham zaman ve konum verileri işlenerek modelin daha iyi öğrenebileceği "akıllı özelliklere" (Smart Features) dönüştürülmüştür.
+- **Zaman Segmentasyonu:** Günün saatleri, insan davranışlarına göre (Sabah, Öğle, Akşam, Gece) kategorize edilmiştir.
+- **Etkileşim Özellikleri (Interaction Features):** "Gece" ve "Hafta Sonu" gibi iki riskli durumun kesişimi analiz edilmiştir.
+- **Eksik Veri Yönetimi:** Yağış verisindeki eksikler 0 kabul edilip, yağışın miktarı yerine "varlığına" (binary) odaklanılmıştır.
+
+#### 🧩 Seçilen ve Türetilen Feature'lar
+
+**Gelişmiş Zamansal Özellikler:**
+- **Temel:** Hour, DayOfWeek, Month
+- **Is_Weekend:** Hafta sonu trafiğinin hafta içinden farkını yakalamak için.
+- **Is_Rush_Hour:** Trafik yoğunluğunun zirve yaptığı sabah (07-09) ve akşam (15-18) saatleri.
+- **Time_of_Day:** Günü 4 ana dilime ayıran kategorik veri (Morning, Afternoon, Evening, Night).
+- **Is_Night_Weekend:** En yüksek risk grubunu belirlemek için oluşturulan kombinasyon özelliği.
+
+**Yol ve Altyapı (Boolean Flags):**
+- Trafik akışını etkileyen fiziksel özellikler incelenmiştir:
+- `Traffic_Signal`, `Junction`, `Crossing`, `Stop`, `Station`, `Amenity`, `Bump`, `Give_Way` vb.
+
+**Hava Durumu (Türetilmiş):**
+- **Was_Precipitation:** `Precipitation(in)` sütunundaki eksik veriler doldurulduktan sonra oluşturulan, kazada yağış olup olmadığını gösteren (True/False) özellik.
+
+#### 🤖 Kullanılan Modeller
+- LightGBM
+- Stacking
+
+#### 📈 Sonuç ve Gözlemler
+- **Yağış Etkisi:** Yağışlı havalarda gerçekleşen kazaların ciddiyet (Severity) dağılımı görselleştirilmiş ve kuru havalara göre farkları analiz edilmiştir.
+- **Zaman Dilimleri:** Gece saatleri (Night) ve hafta sonlarının kesişiminin (Is_Night_Weekend) kaza dinamikleri üzerindeki ayırt edici etkisi gözlemlenmiştir.
+
+---
+### 👤 Üye 4: Rabia Nur Akdaş
+**Odak Alanı:** Ensemble Learning (Topluluk Öğrenmesi) & PCA ile Boyut İndirgeme
+
+### 🔍 Yaklaşım
+
+Bu projede yaklaşık 2.000.000 örneklemden oluşan büyük ölçekli bir veri seti üzerinde trafik kazası şiddet tahmini yapılmıştır.
+
+Amaç;
+-Gürültüyü azaltmak,
+-Hesaplama maliyetini düşürmek,
+-Model performansını artırmaktır.
+Bu doğrultuda PCA (Principal Component Analysis) kullanılarak boyut indirgeme uygulanmıştır.
+
+### 🔧 Ön İşleme Akışı
+
+StandardScaler ile tüm sayısal özellikler ölçeklendirilmiştir.
+PCA, varyansın %95’ini koruyacak şekilde uygulanmıştır.
+Sınıf dengesizliği problemine karşı modelleme öncesinde dengeleme stratejileri dikkate alınmıştır.
+
+### 🧩 Seçilen Feature Grupları
+Toplam 16 temel özellik üzerinde temizleme, kodlama ve PCA işlemleri gerçekleştirilmiştir.
+
+**🌦️ Meteorolojik & Hava Durumu**
+Temperature(F)
+Humidity(%)
+Pressure(in)
+Visibility(mi)
+Wind_Speed(mph)
+Weather_Condition
+**🕒 Zamansal & Çevresel**
+Start_Time
+Sunrise_Sunset
+**🛣️ Yol & Yapısal Özellikler**
+Traffic_Signal
+Stop
+Give_Way
+Traffic_Calming
+Roundabout
+Crossing
+Junction
+
+### 🤖 Kullanılan Modeller
+
+Projede farklı makine öğrenmesi yaklaşımları denenmiş ve karşılaştırılmıştır:
+
+XGBoost ⭐ (En iyi performans)
+
+Extra Trees Classifier (Random Forest varyasyonu)
+
+HistGradientBoosting Classifier
+
+Logistic Regression (Baseline / Karşılaştırma modeli)
+
+**📈 Model Performans Sonuçları**
+🔹 XGBoost
+
+Accuracy: %59.4
+
+F1-Score: 0.64
+
+🔹 Extra Trees Classifier
+
+Accuracy: %59.2
+
+F1-Score: 0.64
+
+AUC: 0.64
+
+🔹 Logistic Regression
+
+Accuracy: %45.2
+
+F1-Score: 0.52
+
+📌 Değerlendirme:
+XGBoost ve Extra Trees modelleri birbirine oldukça yakın sonuçlar vermiştir. Ancak XGBoost, marjinal farkla en başarılı model olarak öne çıkmıştır.
+
+🛠️ Ek Notlar – Veri Ön İşleme Detayları
+
+Projede gelişmiş ve modüler bir pipeline yapısı kullanılmıştır:
+**Eksik Veri İşleme:**
+Sayısal ve kategorik değişkenler için ayrı imputasyon stratejileri uygulanmıştır.
+**Feature Selection:**
+Yol durumu, hava koşulları ve zaman bilgisini temsil eden en kritik 16 özellik manuel olarak seçilmiştir.
+**Encoding & Scaling:**
+Kategorik değişkenler sayısal formata dönüştürülmüş, PCA öncesinde tüm veriler aynı ölçeğe getirilmiştir.
+**Stratified K-Fold Cross Validation:**
+Modellerin genelleme yeteneğini doğru ölçebilmek için katmanlı çapraz doğrulama kullanılmıştır.
+
+### 👤 Üye 5: İremnur Erbaş
+**Odak Alanı:** Metin Madenciliği (NLP – Description Sütunu)
+
+#### 🔍 Yaklaşım
+Description sütunu kullanılarak Doğal Dil İşleme (NLP) uygulanmıştır.
+
+#### 🤖 Kullanılan Modeller
+- TF-IDF + Random Forest
+- Neural Networks (Basit YSA)
+
+#### 📈 Sonuç
+"blocked", "closed" gibi kelimelerin yüksek şiddetli kazalarla güçlü ilişkisi olduğu tespit edilmiştir.
+
+---
+
+## 📌 Genel Değerlendirme
+
+- **Boosting tabanlı modeller** (CatBoost, XGBoost, LightGBM) genel olarak en başarılı yaklaşımlar olmuştur
+- **Zamansal, mekânsal ve meteorolojik faktörler** kaza şiddetini doğrudan etkilemektedir
+- **Metin verileri**, yardımcı fakat anlamlı katkılar sağlamıştır
+
+---
+
+## 🚀 Kurulum ve Kullanım
+
+```bash
+# Gerekli kütüphaneleri yükleyin
+pip install -r requirements.txt
+
+# Jupyter Notebook'u başlatın
+jupyter notebook
+```
+
+---
+
+## 📚 Kullanılan Teknolojiler
+
+- Python 3.x
+- Pandas, NumPy
+- Scikit-learn
+- XGBoost, LightGBM, CatBoost
+- Matplotlib, Seaborn
+- NLTK / Spacy (NLP için)
+
+---
+
+## 👥 Ekip Üyeleri
+
+1. Sıla Karahan - PCA & Ensemble Models
+2. İlkay Özkan - Boosting Algorithms
+3. Ahmet Koç - Time & Location Analysis
+4. Rabia Nur Akdaş - Numerical Features & PCA
+5. İremnur Erbaş - NLP & Text Mining
+
