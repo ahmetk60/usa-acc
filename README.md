@@ -266,19 +266,125 @@ Kategorik değişkenler sayısal formata dönüştürülmüş, PCA öncesinde t�
 Modellerin genelleme yeteneğini doğru ölçebilmek için katmanlı çapraz doğrulama kullanılmıştır.
 
 ### 👤 Üye 5: İremnur Erbaş
-**Odak Alanı:** Metin Madenciliği (NLP – Description Sütunu)
 
-#### 🔍 Yaklaşım
-Description sütunu kullanılarak Doğal Dil İşleme (NLP) uygulanmıştır.
-
-#### 🤖 Kullanılan Modeller
-- TF-IDF + Random Forest
-- Neural Networks (Basit YSA)
-
-#### 📈 Sonuç
-"blocked", "closed" gibi kelimelerin yüksek şiddetli kazalarla güçlü ilişkisi olduğu tespit edilmiştir.
+**Odak Alanı:** Sayısal Özellikler, Feature Selection & Boosting Tabanlı Sınıflandırma
 
 ---
+
+### 🔍 Yaklaşım
+
+Bu çalışmada **US Accidents** veri seti kullanılarak trafik kazası şiddetinin (**Severity 1–4**) tahmin edilmesi amaçlanmıştır.
+Modelleme sürecinde özellikle **sayısal**, **zamansal** ve **yol altyapısı** temelli özellikler üzerine odaklanılmıştır.
+
+**Amaçlar:**
+
+* Büyük ölçekli veri üzerinde **kararlı ve genellenebilir** modeller oluşturmak
+* **Boosting tabanlı yaklaşımları** karşılaştırmak
+* **Yüksek şiddetli kazaların (Severity 3–4)** tahmin başarısını artırmak
+
+Çalışma yaklaşık **1.000.000 örneklem** üzerinden yürütülmüştür.
+
+---
+
+### 🧩 Kullanılan Feature Grupları
+
+#### 🧮 Sayısal Özellikler
+
+* Temperature (F)
+* Humidity (%)
+* Pressure (in)
+* Visibility (mi)
+* Wind_Speed (mph)
+* Distance (mi)
+
+#### 🕒 Zamansal Özellikler
+
+* Hour
+* DayOfWeek
+* Month
+* Is_Weekend
+
+#### 🛣️ Yol & Altyapı Özellikleri
+
+* Traffic_Signal
+* Junction
+* Crossing
+* Stop
+* Give_Way
+* Roundabout
+
+---
+
+### 🛠️ Veri Ön İşleme Süreci
+
+**Eksik Veri İşleme**
+
+* Sayısal değişkenler → **Medyan**
+* Kategorik değişkenler → **Mod**
+
+**Outlier Clipping**
+
+* Sayısal veriler **%1 – %99 persentil** aralığında sınırlandırılmıştır.
+
+**Encoding**
+
+* Boolean ve kategorik değişkenler sayısal formata dönüştürülmüştür.
+
+**Stratified Train–Test Split**
+
+* Sınıf dağılımı korunarak veri ayrımı yapılmıştır.
+
+---
+
+### 🤖 Kullanılan Modeller
+
+* Gradient Boosting Classifier
+* Random Forest Classifier
+* **XGBoost Classifier ⭐ (Ana Model)**
+
+Gradient Boosting modeli, XGBoost öncesinde **referans boosting modeli** olarak kullanılmış ve performans karşılaştırmaları bu çerçevede yapılmıştır.
+
+---
+
+### 📈 Model Performansı ve Değerlendirme
+
+**🔹 Gradient Boosting – Confusion Matrix**
+
+* Klasik boosting yaklaşımıyla anlamlı sonuçlar üretmiştir
+* Ancak dengesiz ve yüksek boyutlu veri yapısında sınırlı kalmıştır
+
+**🔹 Random Forest – Confusion Matrix**
+
+* Dengeli sonuçlar vermiştir
+* Boosting modellere kıyasla daha düşük ayırt edicilik göstermiştir
+
+**🔹 XGBoost – Confusion Matrix**
+
+* En yüksek genel başarıyı sağlamıştır
+* Özellikle **Severity 3 ve 4** sınıflarında belirgin iyileşme görülmüştür
+
+**🔹 ROC Curve & AUC (One-vs-Rest)**
+
+* Çok sınıflı yapı için **One-vs-Rest ROC–AUC** yaklaşımı uygulanmıştır
+* XGBoost modelinin ayırt edicilik gücü açıkça gözlemlenmiştir
+
+---
+
+### 🧠 Gözlemler
+
+* Boosting tabanlı modeller, klasik ağaç yöntemlerine göre daha iyi genelleme sağlamıştır
+* **Distance** ve **Visibility**, yüksek şiddetli kazalar için en güçlü belirleyici özelliklerdir
+* **Gradient Boosting → referans model**, **XGBoost → nihai model** olarak konumlandırılmıştır
+
+---
+
+### 📌 Katkı Özeti
+
+* Gradient Boosting, Random Forest ve XGBoost **karşılaştırmalı analizi**
+* Büyük veri üzerinde **boosting tabanlı modelleme**
+* Yüksek şiddetli kazalara odaklı **ROC–AUC değerlendirmesi**
+* Temiz, okunabilir ve **akademik düzeyde kodlama yaklaşımı**
+
 
 ## 📌 Genel Değerlendirme
 
