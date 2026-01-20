@@ -269,8 +269,6 @@ Modellerin genelleme yeteneğini doğru ölçebilmek için katmanlı çapraz do�
 
 **Odak Alanı:** Sayısal Özellikler, Feature Selection & Boosting Tabanlı Sınıflandırma
 
----
-
 ### 🔍 Yaklaşım
 
 Bu çalışmada **US Accidents** veri seti kullanılarak trafik kazası şiddetinin (**Severity 1–4**) tahmin edilmesi amaçlanmıştır.
@@ -283,8 +281,6 @@ Modelleme sürecinde özellikle **sayısal**, **zamansal** ve **yol altyapısı*
 * **Yüksek şiddetli kazaların (Severity 3–4)** tahmin başarısını artırmak
 
 Çalışma yaklaşık **1.000.000 örneklem** üzerinden yürütülmüştür.
-
----
 
 ### 🧩 Kullanılan Feature Grupları
 
@@ -313,8 +309,6 @@ Modelleme sürecinde özellikle **sayısal**, **zamansal** ve **yol altyapısı*
 * Give_Way
 * Roundabout
 
----
-
 ### 🛠️ Veri Ön İşleme Süreci
 
 **Eksik Veri İşleme**
@@ -334,8 +328,6 @@ Modelleme sürecinde özellikle **sayısal**, **zamansal** ve **yol altyapısı*
 
 * Sınıf dağılımı korunarak veri ayrımı yapılmıştır.
 
----
-
 ### 🤖 Kullanılan Modeller
 
 * Gradient Boosting Classifier
@@ -344,7 +336,6 @@ Modelleme sürecinde özellikle **sayısal**, **zamansal** ve **yol altyapısı*
 
 Gradient Boosting modeli, XGBoost öncesinde **referans boosting modeli** olarak kullanılmış ve performans karşılaştırmaları bu çerçevede yapılmıştır.
 
----
 
 ### 📈 Model Performansı ve Değerlendirme
 
@@ -368,7 +359,6 @@ Gradient Boosting modeli, XGBoost öncesinde **referans boosting modeli** olarak
 * Çok sınıflı yapı için **One-vs-Rest ROC–AUC** yaklaşımı uygulanmıştır
 * XGBoost modelinin ayırt edicilik gücü açıkça gözlemlenmiştir
 
----
 
 ### 🧠 Gözlemler
 
@@ -376,7 +366,6 @@ Gradient Boosting modeli, XGBoost öncesinde **referans boosting modeli** olarak
 * **Distance** ve **Visibility**, yüksek şiddetli kazalar için en güçlü belirleyici özelliklerdir
 * **Gradient Boosting → referans model**, **XGBoost → nihai model** olarak konumlandırılmıştır
 
----
 
 ### 📌 Katkı Özeti
 
@@ -392,7 +381,6 @@ Gradient Boosting modeli, XGBoost öncesinde **referans boosting modeli** olarak
 - **Zamansal, mekânsal ve meteorolojik faktörler** kaza şiddetini doğrudan etkilemektedir
 - **Metin verileri**, yardımcı fakat anlamlı katkılar sağlamıştır
 
----
 
 ## 🚀 Kurulum ve Kullanım
 
