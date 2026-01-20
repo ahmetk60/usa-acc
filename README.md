@@ -407,9 +407,9 @@ jupyter notebook
 
 ## 👥 Ekip Üyeleri
 
-1. Sıla Karahan - PCA & Ensemble Models
-2. İlkay Özkan - Boosting Algorithms
-3. Ahmet Koç - Time & Location Analysis
-4. Rabia Nur Akdaş - Numerical Features & PCA
-5. İremnur Erbaş - NLP & Text Mining
+1. Sıla Karahan - PCA Tabanlı Boyut İndirgeme & Ensemble Modeller
+2. İlkay Özkan - Metin Madenciliği (NLP) & Boosting Algoritmaları (CatBoost, AdaBoost)
+3. Ahmet Koç - Zamansal Segmentasyon, Mekânsal Altyapı & Gelişmiş Boosting / Stacking
+4. Rabia Nur Akdaş - PCA ile Boyut İndirgeme & Ensemble Learning
+5. İremnur Erbaş - Sayısal & Zamansal Özellikler ile Boosting Tabanlı Sınıflandırma
 
